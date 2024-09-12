@@ -50,6 +50,28 @@ def find_json_file(search_path):
     raise FileNotFoundError(f"No .json file found in '{search_path}'")
 
 
+def find_ini_file(search_path):
+    """
+    Search for a .ini file in the specified directory and its subdirectories.
+
+    Args:
+        search_path (str): The directory path to start searching for the .ini file.
+
+    Returns:
+        str: The path to the found .ini file.
+
+    Raises:
+        FileNotFoundError: If no .ini file is found in the specified path.
+    """
+    # Walk through the directory to find the .ini file
+    for root, _, files in os.walk(search_path):
+        for file in files:
+            if file.endswith(".ini"):
+                return os.path.join(root, file)
+
+    raise FileNotFoundError(f"No .ini file found in '{search_path}'")
+
+
 def encrypt_file(input_file, output_file, key_file):
     """
     Encrypt the input file using the key from the key file and save the encrypted data to the output file.
@@ -80,8 +102,9 @@ def encrypt_file(input_file, output_file, key_file):
 
 if __name__ == "__main__":
     search_path_key = "utils"
-    key_filename = "{env_name}_secret.key"
+    key_filename = "partners_in_care_secret.key"
     search_path_json = "utils"
+    search_path_ini = "utils"
 
     # Find or create the key file
     key_path = find_or_create_key_file(search_path_key, key_filename)
@@ -91,3 +114,8 @@ if __name__ == "__main__":
     output_file_path = json_file_path + ".enc"
 
     encrypt_file(json_file_path, output_file_path, key_path)
+
+    ini_file_path = find_ini_file(search_path_ini)
+    output_file_path = ini_file_path + ".enc"
+
+    encrypt_file(ini_file_path, output_file_path, key_path)

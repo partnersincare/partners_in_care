@@ -81,7 +81,7 @@ def decrypt_file(enc_file, key_file, dec_file):
 
 if __name__ == "__main__":
     search_path_key = "utils"
-    key_filename = "{env_name}_secret.key"
+    key_filename = "partners_in_care_secret.key"
     search_path_json = "utils"
 
     # Find the key file
