@@ -8,11 +8,14 @@ from pathlib import Path
 import json
 
 config_file_path = (
-    "utils\\config_call_center.json"  # located in the same directory as this file
+    "utils\\config_partners_in_care.json"  # located in the same directory as this file
 )
-config_object = json.load(open(config_file_path, "r"))
+with open(config_file_path, "r") as file:
+    config_object = json.load(file)
 
-call_center_data_team = config_object["email_addresses"]["call_center_data_team"]
+partners_in_care_data_team = config_object["email_addresses"][
+    "partners_in_care_data_team"
+]
 
 
 def send_email(subject, body, sender, receiver, attachments=None, priority="3"):
@@ -75,5 +78,5 @@ def send_email(subject, body, sender, receiver, attachments=None, priority="3"):
 
 def send_task_alert(subject, body):
     sender_email = "Joshua.allen@horne.com"
-    receiver_email = call_center_data_team
+    receiver_email = partners_in_care_data_team
     send_email(subject, body, sender_email, receiver_email)
