@@ -27,26 +27,48 @@ def find_key_file(search_path, key_filename):
                 )
 
 
-def find_encrypted_file(search_path):
+def find_json_file(search_path):
     """
-    Search for an encrypted file (.enc) in the specified directory and its subdirectories.
+    Search for a .json file in the specified directory and its subdirectories.
 
     Args:
-        search_path (str): The directory path to start searching for the encrypted file.
+        search_path (str): The directory path to start searching for the .json file.
 
     Returns:
-        str: The path to the found encrypted file.
+        str: The path to the found .json file.
 
     Raises:
-        FileNotFoundError: If no encrypted file is found in the specified path.
+        FileNotFoundError: If no .json file is found in the specified path.
     """
-    # Walk through the directory to find the encrypted file
+    # Walk through the directory to find the .json file
     for root, _, files in os.walk(search_path):
         for file in files:
-            if file.endswith(".enc"):
+            if file.endswith(".json.enc"):
                 return os.path.join(root, file)
 
-    raise FileNotFoundError(f"No encrypted file found in '{search_path}'")
+    raise FileNotFoundError(f"No .json file found in '{search_path}'")
+
+
+def find_ini_file(search_path):
+    """
+    Search for a .ini file in the specified directory and its subdirectories.
+
+    Args:
+        search_path (str): The directory path to start searching for the .ini file.
+
+    Returns:
+        str: The path to the found .ini file.
+
+    Raises:
+        FileNotFoundError: If no .ini file is found in the specified path.
+    """
+    # Walk through the directory to find the .ini file
+    for root, _, files in os.walk(search_path):
+        for file in files:
+            if file.endswith(".ini.enc"):
+                return os.path.join(root, file)
+
+    raise FileNotFoundError(f"No .ini file found in '{search_path}'")
 
 
 def decrypt_file(enc_file, key_file, dec_file):
@@ -83,11 +105,18 @@ if __name__ == "__main__":
     search_path_key = "utils"
     key_filename = "partners_in_care_secret.key"
     search_path_json = "utils"
+    search_path_ini = "utils"
 
     # Find the key file
     key_path = find_key_file(search_path_key, key_filename)
 
     # Find the encrypted file
-    enc_file_path = find_encrypted_file(search_path_json)
+    enc_file_path = find_json_file(search_path_json)
+
+    dec_file_path = enc_file_path[:-4]  # Remove the .enc extension
+    decrypt_file(enc_file_path, key_path, dec_file_path)
+
+    # Find the encrypted file
+    enc_file_path = find_ini_file(search_path_ini)
     dec_file_path = enc_file_path[:-4]  # Remove the .enc extension
     decrypt_file(enc_file_path, key_path, dec_file_path)
