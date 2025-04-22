@@ -11,6 +11,7 @@ import os
 
 MAX_RETRIES = 3
 RETRY_DELAY_SECONDS = 2
+RETRY_CONNECTION_DELAY_SECONDS = 60
 
 def retry_to_sql(chunk, session, tbl_nm, schema, dtypes, replace):
     """Attempts to insert a chunk with retry logic."""
@@ -83,20 +84,17 @@ class PicHorneDashesConnection:
             "mssql+pyodbc", query={"odbc_connect": connection_string}
         )
 
-        max_retries = 3
-        retry_delay = 60  # seconds
-
-        for attempt in range(1, max_retries + 1):
+        for attempt in range(1, MAX_RETRIES + 1):
             try:
                 self.engine = create_engine(connection_url, fast_executemany=True)
                 self.conn = self.engine.connect()
                 break  # Successful connection
             except (pyodbc.OperationalError, OperationalError, SQLAlchemyError) as e:
-                if attempt < max_retries:
-                    print(f"[Attempt {attempt}] Database connection failed. Retrying in {retry_delay} seconds...")
-                    time.sleep(retry_delay)
+                if attempt < MAX_RETRIES:
+                    print(f"[Attempt {attempt}] Database connection failed. Retrying in {RETRY_CONNECTION_DELAY_SECONDS} seconds...")
+                    time.sleep(RETRY_CONNECTION_DELAY_SECONDS)
                 else:
-                    raise RuntimeError(f"Failed to connect to database after {max_retries} attempts: {e}") from e
+                    raise RuntimeError(f"Failed to connect to database after {MAX_RETRIES} attempts: {e}") from e
                 
 
 
