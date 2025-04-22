@@ -9,4 +9,4 @@ out_notebook = (
     + "\\output_nbs\\Output_DATA_INGESTION_FROM_LOOKER_LOS_UTILIZATION.ipynb"
 )
 
-pm.execute_notebook(in_notebook, out_notebook)
+pm.execute_notebook(in_notebook, out_notebook, log_output=True)
