@@ -150,3 +150,5 @@ excel_documents/
 # key files
 *.key
     
+# macOS
+.DS_Store
